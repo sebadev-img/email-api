@@ -2,6 +2,7 @@
 using apiEmail.Services.Interfaces;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
@@ -11,10 +12,12 @@ namespace apiEmail.Services.Implementation
     public class EmailService: IEmailService
     {
         private readonly EmailSettings _emailSettings;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EmailService(IOptions<EmailSettings> emailSettings)
+        public EmailService(IOptions<EmailSettings> emailSettings, IWebHostEnvironment webHostEnvironment)
         {
             _emailSettings = emailSettings.Value;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task SendEmailAsync(string senderName, string toEmail, string subject, string body)
@@ -39,6 +42,33 @@ namespace apiEmail.Services.Implementation
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
+        }
+
+        public async Task<string> LoadEmailTemplate(string templateName, Dictionary<string, string> replacements)
+        {
+            // Construct the full path to the template file
+            // e.g., templateName could be "email/WelcomeEmail.html"
+            string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "templates", templateName);
+
+            if (!File.Exists(filePath))
+            {
+                // Handle the case where the template file doesn't exist
+                throw new FileNotFoundException($"Template file not found at {filePath}");
+            }
+
+            // Read the entire file content
+            string templateContent = await File.ReadAllTextAsync(filePath);
+
+            // Perform placeholder replacements
+            if (replacements != null)
+            {
+                foreach (var replacement in replacements)
+                {
+                    templateContent = templateContent.Replace($"{{{{{replacement.Key}}}}}", replacement.Value);
+                }
+            }
+
+            return templateContent;
         }
     }
 }

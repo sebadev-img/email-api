@@ -2,6 +2,7 @@
 using apiEmail.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace apiEmail.Controllers
 {
@@ -21,7 +22,17 @@ namespace apiEmail.Controllers
         {
             try
             {
-                await _emailService.SendEmailAsync(request.SenderName, request.ToEmail, request.Subject, request.Body);
+                var replacements = new Dictionary<string, string>
+            {
+                { "Nombre", request.Nombre },                
+                { "CurrentYear", DateTime.Now.Year.ToString() }
+            };
+
+                string emailBody = await _emailService.LoadEmailTemplate("email/comprobante.html", replacements);
+                string senderName = "Congreso Docente 2025";
+                string subject = "Inscripción Congreso Docente 2025";
+
+                await _emailService.SendEmailAsync(senderName, request.ToEmail, subject, emailBody);
                 return Ok("Email sent successfully.");
             }
             catch (Exception ex)
