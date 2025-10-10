@@ -142,8 +142,37 @@
                     </tr>
                     <tr>
                         <td class="content">
-                            <p>Hola {{Nombre}},</p>
+                            <p>Hola {{Apellido}} {{Nombre}},</p>
                             <p>Recibimos tu inscripción para el congreso docente 2025.</p>
+                            <p>Se te asignó al siguiente grupo:</p>
+                            <table style="width: 500px; margin-left: auto; margin-right: auto; table-layout: fixed; font-size:16px;">
+                                <colgroup>
+                                    <col style="width: 30%;">
+                                    <col style="width: 70%;">
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Sede: </strong></td>
+                                        <td>{{Sede}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dirección: </strong></td>
+                                        <td>{{Direccion}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Subgrupo: </strong></td>
+                                        <td>{{Subgrupo}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Día: </strong></td>
+                                        <td>{{Dia}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Hora: </strong></td>
+                                        <td>{{Hora}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </td>
                     </tr>
                     <tr>

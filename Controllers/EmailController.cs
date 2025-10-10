@@ -24,7 +24,13 @@ namespace apiEmail.Controllers
             {
                 var replacements = new Dictionary<string, string>
             {
-                { "Nombre", request.Nombre },                
+                { "Nombre", request.Nombre },
+                { "Apellido", request.Apellido },
+                { "Sede", request.Sede },
+                { "Direccion", request.Direccion },
+                { "Subgrupo", request.Subgrupo },
+                { "Dia", request.Dia },
+                { "Hora", request.Hora },
                 { "CurrentYear", DateTime.Now.Year.ToString() }
             };
 
