@@ -3,6 +3,7 @@ version: '3.4'
 services:
   email-api:
     build: .
+    restart: always
     ports:
       - "5020:8080"
       - "5021:8081"
