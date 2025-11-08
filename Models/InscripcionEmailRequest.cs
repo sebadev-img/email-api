@@ -15,9 +15,7 @@ namespace apiEmail.Models
         [Required]
         public string Dni { get; set; }
         [Required]
-        public string Colegio { get; set; }
-        [Required]
-        public string Modalidad { get; set; }
+        public string Colegio { get; set; }      
         
     }
 }

@@ -26,14 +26,13 @@ namespace apiEmail.Controllers
                 { "Nombre", request.Nombre },
                 { "Apellido", request.Apellido },
                 { "Dni", request.Dni },
-                { "Colegio", request.Colegio },
-                { "Modalidad", request.Modalidad },
+                { "Colegio", request.Colegio },                
                 { "CurrentYear", DateTime.Now.Year.ToString() }
             };
 
                 string emailBody = await _emailService.LoadEmailTemplate("email/inscripcionComprobante.html", replacements);
-                string senderName = "Inscripcion";
-                string subject = "Inscripción";
+                string senderName = "Pre-Inscripciones Generales - Nivel Secundario";
+                string subject = "Comprobante de Inscripción";
 
                 await _emailService.SendEmailAsync(senderName, request.ToEmail, subject, emailBody);
                 return Ok("Email sent successfully.");
@@ -58,14 +57,13 @@ namespace apiEmail.Controllers
                     { "Nombre", request.Nombre },
                     { "Apellido", request.Apellido },
                     { "Dni", request.Dni },
-                    { "Colegio", request.Colegio },
-                    { "Modalidad", request.Modalidad },
+                    { "Colegio", request.Colegio },                    
                     { "CurrentYear", DateTime.Now.Year.ToString() }
                 };
 
                     string emailBody = await _emailService.LoadEmailTemplate("email/inscripcionComprobante.html", replacements);
-                    string senderName = "Inscripcion";
-                    string subject = "Inscripción";
+                    string senderName = "Pre-Inscripciones Generales - Nivel Secundario";
+                    string subject = "Comprobante de Inscripción";
 
                     await _emailService.SendEmailAsync(senderName, request.ToEmail, subject, emailBody);
 
