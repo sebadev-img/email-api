@@ -70,5 +70,46 @@ namespace apiEmail.Services.Implementation
 
             return templateContent;
         }
+
+        public async Task SendEmailWithPdfAsync(string senderName, string toEmail, string subject, string body, byte[]? pdfBytes = null, string? pdfFilename = null)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(senderName, _emailSettings.SenderEmail));
+            message.To.Add(new MailboxAddress("", toEmail));
+            message.Subject = subject;
+            
+            var bodyBuilder = new BodyBuilder
+            {
+                HtmlBody = body
+            };
+           
+            if (pdfBytes != null && pdfFilename != null)
+            {
+                bodyBuilder.Attachments.Add(
+                    pdfFilename,
+                    pdfBytes,
+                    new ContentType("application", "pdf")
+                );
+            }
+
+            message.Body = bodyBuilder.ToMessageBody();
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(
+                    _emailSettings.SmtpServer,
+                    _emailSettings.SmtpPort,
+                    SecureSocketOptions.StartTls
+                );
+
+                await client.AuthenticateAsync(
+                    _emailSettings.SenderEmail,
+                    _emailSettings.Password
+                );
+
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+        }
     }
 }

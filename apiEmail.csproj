@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\img\" />
+    <Folder Include="wwwroot\templates\pdf\" />
   </ItemGroup>
 
 </Project>

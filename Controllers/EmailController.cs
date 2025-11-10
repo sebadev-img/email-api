@@ -90,5 +90,38 @@ namespace apiEmail.Controllers
             // Another option for partial success is the 207 Multi-Status code.
             return Ok(results);
         }
+
+        [HttpPost("sendConfirmacion")]
+        public async Task<IActionResult> SendConfirmacion([FromBody] EmailRequest request)
+        {
+            try
+            {
+                var replacements = new Dictionary<string, string>
+            {
+                { "Nombre", request.Nombre },
+                { "Apellido", request.Apellido },
+                { "Sede", request.Sede },
+                { "Direccion", request.Direccion },
+                { "Subgrupo", request.Subgrupo },
+                { "Dia", request.Dia },
+                { "Hora", request.Hora },
+                { "CurrentYear", DateTime.Now.Year.ToString() }
+            };
+
+                string emailBody = await _emailService.LoadEmailTemplate("email/confirmacion.html", replacements);
+                string senderName = "Congreso Docente 2025";
+                string subject = "Inscripción Congreso Docente 2025";
+
+                var pdfPath = Path.Combine("wwwroot", "templates", "pdf", "cronograma.pdf");
+                byte[] pdfBytes = await System.IO.File.ReadAllBytesAsync(pdfPath);
+
+                await _emailService.SendEmailWithPdfAsync(senderName, request.ToEmail, subject, emailBody, pdfBytes, "Cronograma Congreso Internacional de Educación 2025.pdf");
+                return Ok("Email sent successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
     }
 }
