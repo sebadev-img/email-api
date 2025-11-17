@@ -175,5 +175,31 @@ namespace apiEmail.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
+        [HttpPost("sendCertificadoModerador")]
+        public async Task<IActionResult> SendCertificadoModerador([FromBody] InvitacionEmailRequest request)
+        {
+            try
+            {
+                var replacements = new Dictionary<string, string>
+            {
+                { "CurrentYear", DateTime.Now.Year.ToString() }
+            };
+
+                string emailBody = await _emailService.LoadEmailTemplate("email/certificadoModerador.html", replacements);
+                string senderName = "Congreso Docente 2025";
+                string subject = "Certificado Moderador Congreso Docente 2025";
+
+                //var pdfPath = Path.Combine("wwwroot", "templates", "pdf", "cronograma.pdf");
+                //byte[] pdfBytes = await System.IO.File.ReadAllBytesAsync(pdfPath);
+
+                await _emailService.SendEmailWithPdfAsync(senderName, request.ToEmail, subject, emailBody, null, "Cronograma Congreso Internacional de Educación 2025.pdf");
+                return Ok("Email sent successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
     }
 }
